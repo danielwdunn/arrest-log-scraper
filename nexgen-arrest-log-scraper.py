@@ -1,10 +1,10 @@
 import fitz
 import xlsxwriter
 
-pdf_document = "hamdenarrestlog.pdf"
+pdf_document = "arrestlog.pdf"
 doc = fitz.open(pdf_document)
 page=doc.pageCount
-workbook = xlsxwriter.Workbook('Output.xlsx')
+workbook = xlsxwriter.Workbook('Arrest_Log.xlsx')
 row = 0
 column = 0
 
