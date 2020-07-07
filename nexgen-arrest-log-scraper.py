@@ -1,7 +1,7 @@
 import fitz
 import xlsxwriter
 
-pdf_document = "arrestlog.pdf"
+pdf_document = "hamdenarrestlog.pdf"
 doc = fitz.open(pdf_document)
 page=doc.pageCount
 workbook = xlsxwriter.Workbook('Output.xlsx')
@@ -15,6 +15,36 @@ for i in range(page):
             page=page1text
             page=page.split(" Remarks:")
             for j in range(len(page)-1):
+
+                try:
+                    race=page[j].split("Name:")[0]
+                    race1=str.splitlines(race)
+                    for i in race1:
+                        if race1[0] == '':
+                            race_of_arrested = race1[11]
+                        elif race1[0] == 'HAMDEN POLICE DEPARTMENT':
+                             race_of_arrested = race1[18]
+                        else:
+                            race_of_arrested = "Race not Found"
+                except: race_of_arrested = "error"
+
+                try:
+                    sex=page[j].split("Name:")[0]
+                    sex1=str.splitlines(sex)
+                    for i in sex1:
+                        if sex1[0] == '':
+                            sex_of_arrested = sex1[12]
+                        elif sex1[0] == 'HAMDEN POLICE DEPARTMENT':
+                             sex_of_arrested = sex1[19]
+                        else:
+                            sex_of_arrested = "Sex not Found"
+                except: sex="error"
+                try:
+                    dob=page[j].split("D.O.B.")[1]
+                    dob1=(str.splitlines(dob))
+                    date_of_birth = dob1[1]
+                except:
+                    dob="error"
                 try:
                     incidentNo=page[j].split(" Arresting Officer:")[0].split("\n")[-2]
                     if(incidentNo[0].isdigit()):
@@ -31,6 +61,13 @@ for i in range(page):
                     whereArrested=page[j].split("Where Arrested:")[1].split("Court Date:")[0].strip()
                 except:
                     whereArrested=""
+                try:
+                    dateArrested=page[j].split("Arrested:")[1].strip(" Where")
+                    dateTimeArrestedList=(str.splitlines(dateArrested))
+                    dateA: str=dateTimeArrestedList[1]
+                    timeA=dateTimeArrestedList[2]
+                except:
+                    dateArrested=""
                 charge=""
                 try:
                     a=page[j].split("Description")[1].split("\n")
@@ -43,7 +80,7 @@ for i in range(page):
                 except:
                     charge=""
                 l=charge
-                content = [incidentNo,arrestingOfficer,whereArrested,charge]
+                content = [incidentNo,dateA,timeA,arrestingOfficer,whereArrested,date_of_birth,race_of_arrested,sex_of_arrested,charge]
                 for item in content:
                     # write operation perform
                     worksheet.write(row, column, item)
